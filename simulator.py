@@ -17,13 +17,21 @@ hand_rank_names = {
     2: 'One Pair',
     1: 'High Card'
 }
+simulations = 100000  # You can increase this number for more accurate results
+from_file = True
 
 def get_input():
-    num_players = int(input("Enter number of players (including you): "))
-    your_hand_input = input("Enter your hole cards (e.g., 'As Kd'): ")
-    your_hand = your_hand_input.strip().split()
-    community_cards_input = input("Enter community cards (e.g., 'Jh Tc 2c'): ")
-    community_cards = community_cards_input.strip().split()
+    if not from_file:
+        num_players = int(input("Enter number of players (including you): "))
+        your_hand_input = input("Enter your hole cards (e.g., 'As Kd'): ")
+        your_hand = your_hand_input.strip().split()
+        community_cards_input = input("Enter community cards (e.g., 'Jh Tc 2c'): ")
+        community_cards = community_cards_input.strip().split()
+    else:
+        with open("./input_file") as file:
+            num_players = int(file.readline())
+            your_hand = list(file.readline().split())
+            community_cards = list(file.readline().split())
     return num_players, your_hand, community_cards
 
 def remove_cards_from_deck(deck, cards_to_remove):
@@ -232,7 +240,6 @@ def simulate(num_players, your_hand, community_cards, simulations=10000):
 
 def main():
     num_players, your_hand, community_cards = get_input()
-    simulations = 10000  # You can increase this number for more accurate results
     win_rate, tie_rate, loss_rate, hand_value_probs = simulate(num_players, your_hand, community_cards, simulations)
 
     print(f"\nAfter {simulations} simulations:")
